@@ -9,7 +9,7 @@ void main() => runApp(MyApp());
 @immutable
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  var routes = <String, WidgetBuilder>{
+  final routes = <String, WidgetBuilder>{
     '/': (context) => MyHomePage(title: 'DB Works X'),
     '/camera': (context) => TakePictureScreen(),
   };
