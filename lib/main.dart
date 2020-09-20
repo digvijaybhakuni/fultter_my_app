@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'dart:io';
+import 'dart:async';
 
 import 'package:my_app/camera_action.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_app/view_camera_preview.dart';
+import 'package:my_app/pdf_viewer.dart';
+
+import 'package:path_provider/path_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -46,6 +53,31 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void openPdfAsset(context){
+    fromAsset('assets/sample.pdf', 'sample.pdf').then((f) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => PDFScreen(f.path)));
+    });
+  }
+
+  Future<File> fromAsset(String asset, String filename) async {
+    // To open from assets, you can copy them to the app storage folder, and the access them "locally"
+    Completer<File> completer = Completer();
+
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$filename");
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +100,14 @@ class _MyHomePageState extends State<MyHomePage> {
               print('Next Page');
             },
           ),
+          IconButton(
+            onPressed: () {
+              print("open pdf");
+              openPdfAsset(context);
+            },
+            icon: new Icon(Icons.picture_as_pdf),
+            tooltip: 'Open Pdf',
+          )
         ],
       ),
       body: Center(
