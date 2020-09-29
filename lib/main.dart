@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:my_app/camera_action.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_app/qr_reader.dart';
 import 'package:my_app/view_camera_preview.dart';
 import 'package:my_app/pdf_viewer.dart';
 
@@ -138,6 +139,14 @@ class _MyHomePageState extends State<MyHomePage> {
               label: Text("Get Image",
                   style: Theme.of(context).accentTextTheme.button),
               color: Theme.of(context).accentColor,
+            ),
+            RaisedButton.icon(
+                onPressed: () {
+                  openQrReader(context);
+                },
+                icon: Icon(Icons.graphic_eq),
+                label: Text('Read QR'),
+                color: Theme.of(context).accentColor,
             )
           ],
         ),
@@ -174,6 +183,11 @@ void openImageTaken(context, path) {
       builder: (context) => DisplayPictureScreen(imagePath: path),
     ),
   );
+}
+
+void openQrReader(context) async{
+  final qrdata = await QRReader.scanCam();
+  Navigator.push(context, MaterialPageRoute(builder: (context) => DisplayQRData(qrdata)));
 }
 
 Future<void> optionsCameraDialogBox(context) {

@@ -13,7 +13,10 @@ class DisplayPictureScreen extends StatelessWidget {
       appBar: AppBar(title: Text('Display the Picture')),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
+      body: Padding(
+        padding: EdgeInsets.all(5.0),
+          child: Container(child: Image.file(File(imagePath)))
+      ),
     );
   }
 }
